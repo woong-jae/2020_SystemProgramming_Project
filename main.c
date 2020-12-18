@@ -7,28 +7,31 @@
 
 #include <stdio.h>
 #include <curses.h>
+#include <termios.h>
+#include <fcntl.h>
+
 
 #define MAP_WIDTH 80
 #define MAP_HEIGHT 20
 
-void draw_border();
-void main_screen();
+void set_nodelay_mode(void);
+void set_cr_noecho_mode(void);
+void tty_mode(int);
+void draw_border(void);
+void main_screen(void);
 int main(int argc, const char * argv[]) {
-    
     main_screen();
     return 0;
 }
 
-void main_screen()
-{
-    //no echo mode
-    //no delay
+void main_screen() {
+    
     char input;
     int current_position = 12;
     char selection[3][20] = {"- START", "- SCOREBOARD", "- EXIT"};
     
-    
     initscr();
+    noecho();
     clear();
     draw_border();
     mvaddstr(5, 30, "+------------------+");
@@ -71,8 +74,7 @@ void main_screen()
 }
 
 
-void draw_border()
-{
+void draw_border() {
     for(int i = 0 ; i < MAP_WIDTH; i++) {
         mvaddch(0, i, '-');
     }
@@ -86,3 +88,31 @@ void draw_border()
         mvaddch(i, MAP_WIDTH - 1, '|');
     }
 }
+
+////Set Mode
+//void tty_mode(int how) {
+//    static struct termios original_mode;
+//    static int original_flags;
+//    if (how == 0) {
+//        tcgetattr(0, &original_mode);
+//        original_flags = fcntl(0, F_GETFL);
+//    } else {
+//        tcsetattr(0, TCSANOW, &original_mode);
+//        fcntl(0, F_SETFL, original_flags);
+//    }
+//}
+//void set_cr_noecho_mode() {
+//    struct termios ttystate;
+//    
+//    tcgetattr(0, &ttystate);
+//    ttystate.c_lflag &= ~ICANON;
+//    ttystate.c_lflag &= ~ECHO;
+//    ttystate.c_cc[VMIN] = 1;
+//    tcsetattr(0, TCSANOW, &ttystate);
+//}
+//void set_nodelay_mode() {
+//    int termflags;
+//    termflags = fcntl(0, F_GETFL);
+//    termflags |= O_NDELAY;
+//    fcntl(0, F_SETFL, termflags);
+//}
