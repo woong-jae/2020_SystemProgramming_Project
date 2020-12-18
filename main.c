@@ -10,13 +10,16 @@
 #include <termios.h>
 #include <fcntl.h>
 
-
 #define MAP_WIDTH 80
 #define MAP_HEIGHT 20
 
-void set_nodelay_mode(void);
-void set_cr_noecho_mode(void);
-void tty_mode(int);
+typedef struct word {
+    char *w;
+    int x, y;
+} word;
+
+
+void game(void);
 void draw_border(void);
 void main_screen(void);
 int main(int argc, const char * argv[]) {
@@ -25,7 +28,6 @@ int main(int argc, const char * argv[]) {
 }
 
 void main_screen() {
-    
     char input;
     int current_position = 12;
     char selection[3][20] = {"- START", "- SCOREBOARD", "- EXIT"};
@@ -42,7 +44,7 @@ void main_screen() {
     standend();
     mvaddstr(13, 35, "- SCOREBOARD");
     mvaddstr(14, 35, "- EXIT");
-    mvaddstr(MAP_HEIGHT - 1, 1, "Press 'w' and 's' to move and press 'enter' to select...");
+    mvaddstr(MAP_HEIGHT - 1, 2, "Press 'w' and 's' to move and press 'enter' to select...");
     refresh();
     while (1) {
         input = getch();
@@ -65,6 +67,9 @@ void main_screen() {
             standend();
             refresh();
         }else if(input == '\n') {
+            if(current_position == 12) {
+                game();
+            }
             if(current_position == 14) {
                 break;
             }
@@ -72,7 +77,6 @@ void main_screen() {
     }
     endwin();
 }
-
 
 void draw_border() {
     for(int i = 0 ; i < MAP_WIDTH; i++) {
@@ -89,30 +93,10 @@ void draw_border() {
     }
 }
 
-////Set Mode
-//void tty_mode(int how) {
-//    static struct termios original_mode;
-//    static int original_flags;
-//    if (how == 0) {
-//        tcgetattr(0, &original_mode);
-//        original_flags = fcntl(0, F_GETFL);
-//    } else {
-//        tcsetattr(0, TCSANOW, &original_mode);
-//        fcntl(0, F_SETFL, original_flags);
-//    }
-//}
-//void set_cr_noecho_mode() {
-//    struct termios ttystate;
-//    
-//    tcgetattr(0, &ttystate);
-//    ttystate.c_lflag &= ~ICANON;
-//    ttystate.c_lflag &= ~ECHO;
-//    ttystate.c_cc[VMIN] = 1;
-//    tcsetattr(0, TCSANOW, &ttystate);
-//}
-//void set_nodelay_mode() {
-//    int termflags;
-//    termflags = fcntl(0, F_GETFL);
-//    termflags |= O_NDELAY;
-//    fcntl(0, F_SETFL, termflags);
-//}
+void game() {
+    clear();
+    draw_border();
+    echo();
+    move(MAP_HEIGHT - 1, 2);
+    
+}
