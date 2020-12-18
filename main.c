@@ -18,7 +18,7 @@ typedef struct word {
     int x, y;
 } word;
 
-
+void draw_main(void);
 void game(void);
 void draw_border(void);
 void main_screen(void);
@@ -36,15 +36,7 @@ void main_screen() {
     noecho();
     clear();
     draw_border();
-    mvaddstr(5, 30, "+------------------+");
-    mvaddstr(6, 30, "+      gets()      +");
-    mvaddstr(7, 30, "+------------------+");
-    standout();
-    mvaddstr(12, 35, "- START");
-    standend();
-    mvaddstr(13, 35, "- SCOREBOARD");
-    mvaddstr(14, 35, "- EXIT");
-    mvaddstr(MAP_HEIGHT - 1, 2, "Press 'w' and 's' to move and press 'enter' to select...");
+    draw_main();
     refresh();
     while (1) {
         input = getch();
@@ -68,7 +60,12 @@ void main_screen() {
             refresh();
         }else if(input == '\n') {
             if(current_position == 12) {
+                echo();
                 game();
+                noecho();
+                draw_border();
+                draw_main();
+                refresh();
             }
             if(current_position == 14) {
                 break;
@@ -76,6 +73,18 @@ void main_screen() {
         }
     }
     endwin();
+}
+
+void draw_main() {
+    mvaddstr(5, 30, "+------------------+");
+    mvaddstr(6, 30, "+      gets()      +");
+    mvaddstr(7, 30, "+------------------+");
+    standout();
+    mvaddstr(12, 35, "- START");
+    standend();
+    mvaddstr(13, 35, "- SCOREBOARD");
+    mvaddstr(14, 35, "- EXIT");
+    mvaddstr(MAP_HEIGHT - 1, 2, "Press 'w' and 's' to move and press 'enter' to select...");
 }
 
 void draw_border() {
@@ -96,7 +105,10 @@ void draw_border() {
 void game() {
     clear();
     draw_border();
-    echo();
     move(MAP_HEIGHT - 1, 2);
-    
+    refresh();
+    while(1)
+    {
+        
+    }
 }
