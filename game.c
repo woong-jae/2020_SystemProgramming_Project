@@ -19,7 +19,7 @@ typedef struct Word {
 } word;
 word *wordlist = NULL;
 
-int hp = 3, score = 0;;
+int hp = 3, score = 0;
 char user_input[MAX_INPUT];
 int cursor_position = 0;
 
@@ -91,7 +91,7 @@ void status_bar(void) {
     sprintf(cur_hp, "%d", hp);
     sprintf(cur_score, "%d", score);
     mvaddstr(MAP_HEIGHT - 1, 1, ":");
-    mvaddstr(MAP_HEIGHT - 3, 1, "HP: ");
+    mvaddstr(MAP_HEIGHT - 3, 2, "HP: ");
     addstr(cur_hp);
     addstr(" SCORE: ");
     addstr(cur_score);
