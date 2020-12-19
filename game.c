@@ -29,8 +29,8 @@ void *word_flow(void *none);
 void append_wordlist(void);
 word* make_word(void);
 int delete_word(char *input);
-void reset_wordlist(void);
-void move_word(word* w);
+void reset(void);
+int move_word(word* w);
 
 void game(void)
 {
@@ -53,6 +53,10 @@ void game(void)
             if (input == '\n') {//엔터
                 user_input[cursor_position] = '\0';
                 delete_check = delete_word(user_input);
+                if(delete_check == 1) {
+                    score += 10;
+                    status_bar();
+                }
                 char *blank = create_blank(cursor_position + 1);
                 mvaddstr(MAP_HEIGHT - 1, 2, blank);
                 memset(user_input, '\0', MAX_INPUT);
@@ -81,10 +85,11 @@ void game(void)
         refresh();
     }
     pthread_join(t, NULL);
+    reset();
 }
 
 void status_bar(void) {
-    char cur_score[10], cur_hp[2];
+    char cur_score[10], cur_hp[3];
     for(int i = 1 ; i < MAP_WIDTH - 1; i++) {
         mvaddch(MAP_HEIGHT - 2, i, '-');
     }
@@ -104,48 +109,72 @@ char* create_blank(int length) {
     return blank;
 }
 
-void move_word(word* w) {
+int move_word(word* w) {
     char *blank = create_blank((int)(strlen(w->str) + 1));
     mvaddstr(w->row, w->col, blank);    
     w->col = w->col + 1;
-    if(w->col+strlen(w->str) == MAP_WIDTH)
+    if(w->col + strlen(w->str) >= MAP_WIDTH)
     {
 	    hp--;
-	    if(hp == 0)
+	    if(hp < 0)
 	    {
-		    //GameOver();
-		    //pthread_exit(NULL);
-	    }
-	    w->str = "";
-	    delete_word(w->str);
+		    pthread_exit(NULL);
+        }
+        word *cur, *prev;
+        cur = wordlist;
+        prev = NULL;
+        while(1) {
+            if(w == cur) {
+                if(prev == NULL) {//cur이 첫번째
+                    wordlist = cur -> next;
+                } else {
+                    prev->next = cur->next;
+                }
+                free(cur);
+                break;
+            }
+            prev = cur;
+            cur = cur->next;
+        }
+        status_bar();
+        return 1;
     }
     else
     	mvaddstr(w->row, w->col, w->str);
     refresh();
     free(blank);
+    return 0;
 }
 
-void reset_wordlist(void) {
+
+
+void reset(void) {
     word *cur = wordlist;
-    word *next = cur->next;
-    while(cur != NULL) {
-        free(cur);
-        cur = next;
-        if(cur != NULL) next = cur->next;
+    word *prev = NULL;
+    wordlist = NULL;
+    while(1) {
+        if(cur == NULL) {
+            break;
+        }
+        prev = cur;
+        cur = cur->next;
+        free(prev);
     }
+    hp = 3;
 }
 
 int delete_word(char *input) {//발견 실패 시 '0' 반환, 성공 시 '1' 반환
     word *cur = wordlist;
     word *prev = NULL;
-    while(cur != NULL) {
+    while(1) {
+        if(cur == NULL) {
+            return 0;
+        }
         if(strcmp(cur->str, input) == 0) {//처음
             char *blank = create_blank((int)(strlen(cur->str) + 1));
             mvaddstr(cur->row, cur->col, blank);
-            if(cur == wordlist) {
+            if(prev == NULL) {
                 wordlist = cur->next;
-            } else if (cur->next == NULL) {//끝
-                prev->next = NULL;
             } else {
                 prev->next = cur->next;
             }
@@ -187,12 +216,21 @@ void *word_flow(void *none) {//화면에 글을 출력
 	    if((word_rate%10)==0)
         	append_wordlist();
         word *cur = wordlist;
-        while(cur) {
-            move_word(cur);
-            cur = cur->next;
+        word *next = NULL;
+        while(1) {
+            if(cur == NULL) {
+                if(next == NULL) {
+                    break;
+                }
+                cur = next;
+                next = next->next;
+            } else {
+                move_word(cur);
+                cur = cur->next;
+            }
         }
         move(MAP_HEIGHT - 1 , cursor_position + 2);
         refresh();
-        usleep(500000);
+        usleep(100000);
     }
 }
