@@ -5,18 +5,16 @@
 #include <unistd.h>
 #include <time.h>
 #include <pthread.h>
+#include "gets_header.h"
 
-#define MAP_WIDTH 80
-#define MAP_HEIGHT 20
-#define DATA_SIZE 3
 #define MAX_INPUT 78
+#define DATA_SIZE 87
 
-
-char* data[] = { "aaaa", "asdf", "abcde" };
+char* data[] = {"system programming", "program", "disk", "computer", "getchar", "putchar", "user space", "system space", "kernel", "Unix", "system call", "shell", "ls", "utmp", "wtmp", "0644", "lseek", "directory", "dirent", "permission", "stat", "sticky bit", "pwd", "inode table", "hard link", "mount point", "symbolic links", "stty", "buffering", "race condition", "APPEND", "file descriptor", "terminal driver", "onlcr", "TCSANOW", "canonical mode", "crmode", "static", "blocked", "signal", "Asynchronous signal", "refresh", "sleep", "pause", "microseconds", "SIGVTALRM", "SIGPROF", "struct itimerval", "struct timeval", "fflush", "sigaction", "critical section", "reentrant", "process", "execvp", "fork", "wait", "exit value", "core dump flag", "signal number", "0x7F", "0x80", "shell scripts", "control command", "neutral", "local variables", "environment variables", "extern", "execlp", "pipe", "IPC", "dup", "dup2", "common ancestor", "socket", "disk files", "devices", "child", "parent", "fdopen", "popen", "zombie", "thread", "global variables", "pthread", "mutex", "function"};
 
 typedef struct Word {
     char *str;
-	int row, col;
+    int row, col;
     struct Word *next;
 } word;
 word *wordlist = NULL;
@@ -26,20 +24,19 @@ char user_input[MAX_INPUT];
 int cursor_position = 0;
 
 char* create_blank(int length);
-void draw_border(void);
 void *word_flow(void *none);
 void append_wordlist(void);
 word* make_word(void);
 int delete_word(char *input);
 void reset_wordlist(void);
 void move_word(word* w);
-int main(int argc, const char * argv[])
+
+void game(void)
 {
     int delete_check;
     pthread_t t;
     srand((int)time(NULL));
     
-    initscr();
     clear();
     draw_border();
     move(MAP_HEIGHT - 1 , 2);
@@ -54,17 +51,15 @@ int main(int argc, const char * argv[])
             if (input == '\n') {//엔터
                 user_input[cursor_position] = '\0';
                 delete_check = delete_word(user_input);
-                
-                char *blank = create_blank(sizeof(user_input));
+                char *blank = create_blank(cursor_position + 1);
                 mvaddstr(MAP_HEIGHT - 1, 2, blank);
-                
                 memset(user_input, '\0', MAX_INPUT);
                 move(MAP_HEIGHT - 1, 2);
                 cursor_position = 0;
                 free(blank);
             } else if (input == 127) {//삭제
                 if(cursor_position > 0) {
-                    char *blank = create_blank(sizeof(user_input));
+                    char *blank = create_blank(cursor_position + 1);
                     mvaddstr(MAP_HEIGHT - 1, 2, blank);
                     user_input[--cursor_position] = '\0';
                     move(MAP_HEIGHT - 1, 2);
@@ -85,8 +80,6 @@ int main(int argc, const char * argv[])
     }
     pthread_join(t, NULL);
     
-    endwin();
-    return 0;
 }
 
 char* create_blank(int length) {
@@ -97,7 +90,7 @@ char* create_blank(int length) {
 }
 
 void move_word(word* w) {
-    char *blank = create_blank(sizeof(w->str));
+    char *blank = create_blank((int)(strlen(w->str) + 1));
     mvaddstr(w->row, w->col, blank);
     w->col = w->col + 1;
     mvaddstr(w->row, w->col, w->str);
@@ -120,7 +113,7 @@ int delete_word(char *input) {//발견 실패 시 '0' 반환, 성공 시 '1' 반
     word *prev = NULL;
     while(cur != NULL) {
         if(strcmp(cur->str, input) == 0) {//처음
-            char *blank = create_blank(sizeof(cur->str));
+            char *blank = create_blank((int)(strlen(cur->str) + 1));
             mvaddstr(cur->row, cur->col, blank);
             if(cur == wordlist) {
                 wordlist = cur->next;
@@ -175,20 +168,5 @@ void *word_flow(void *none) {//화면에 글을 출력
         move(MAP_HEIGHT - 1 , cursor_position + 2);
         refresh();
         usleep(200000);
-    }
-}
-
-void draw_border(void) {
-    for(int i = 0 ; i < MAP_WIDTH; i++) {
-        mvaddch(0, i, '-');
-    }
-    for(int i = 0 ; i < MAP_WIDTH; i++) {
-        mvaddch(MAP_HEIGHT, i, '-');
-    }
-    for(int i = 1 ; i < MAP_HEIGHT; i++) {
-        mvaddch(i, 0, '|');
-    }
-    for(int i = 1 ; i < MAP_HEIGHT; i++) {
-        mvaddch(i, MAP_WIDTH - 1, '|');
     }
 }

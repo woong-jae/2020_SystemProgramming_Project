@@ -48,16 +48,13 @@ void main_screen() {
             standend();
             refresh();
         }else if(input == '\n') {
-//            if(current_position == 12) {
-//                echo();
-//                game();
-//                noecho();
-//                draw_border();
-//                draw_main();
-//                refresh();
-//            }
-            if(current_position == 13) {
-                sBoard();
+            if(current_position == 12) {
+                game();
+                draw_border();
+                draw_main();
+                refresh();
+            }else if(current_position == 13) {
+                scoreBoard();
                 clear();
                 draw_border();
                 draw_main();
