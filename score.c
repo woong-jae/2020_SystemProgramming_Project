@@ -48,9 +48,9 @@ void sort_score(void) {
             
         qsort(r, i, sizeof(struct ranking), compare);
         do {
-            sprintf(buf,"%2d:%9s   %5d",n+1, r[n].name, r[n].score);
+            sprintf(buf,"%2d: %9s     %5d",n+1, r[n].name, r[n].score);
             n++;
-            mvaddstr(5+n,30,buf);
+            mvaddstr(5+n,29,buf);
         }while(n<10);
     }
     fclose(f);
@@ -61,8 +61,8 @@ void scoreBoard() {
     
 	clear();
 	draw_border();
-	mvaddstr(3,30,"+---SCOREBOARD---+");
-	mvaddstr(5,28,"+RANK----NAME----SCORE+");
+	mvaddstr(3,31,"+---SCOREBOARD---+");
+	mvaddstr(5,28,"+RANK-----NAME-----SCORE+");
     
 	sort_score();
 
@@ -95,4 +95,5 @@ void input_prof(int score) {
         	fprintf(f, "%s %d\n", name, score);
         	fclose(f);
 	}
+	noecho();
 }
