@@ -51,6 +51,8 @@ void main_screen() {
             if(current_position == 12) {
                 game();
                 clear();
+                scoreBoard();
+                clear();
                 draw_border();
                 draw_main();
                 refresh();
