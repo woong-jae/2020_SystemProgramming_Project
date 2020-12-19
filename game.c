@@ -19,10 +19,11 @@ typedef struct Word {
 } word;
 word *wordlist = NULL;
 
-int hp = 3;
+int hp = 3, score = 0;;
 char user_input[MAX_INPUT];
 int cursor_position = 0;
 
+void status_bar(void);
 char* create_blank(int length);
 void *word_flow(void *none);
 void append_wordlist(void);
@@ -39,6 +40,7 @@ void game(void)
     
     clear();
     draw_border();
+    status_bar();
     move(MAP_HEIGHT - 1 , 2);
     refresh();
 
@@ -79,7 +81,20 @@ void game(void)
         refresh();
     }
     pthread_join(t, NULL);
-    
+}
+
+void status_bar(void) {
+    char cur_score[10], cur_hp[2];
+    for(int i = 1 ; i < MAP_WIDTH - 1; i++) {
+        mvaddch(MAP_HEIGHT - 2, i, '-');
+    }
+    sprintf(cur_hp, "%d", hp);
+    sprintf(cur_score, "%d", score);
+    mvaddstr(MAP_HEIGHT - 1, 1, ":");
+    mvaddstr(MAP_HEIGHT - 3, 1, "HP: ");
+    addstr(cur_hp);
+    addstr(" SCORE: ");
+    addstr(cur_score);
 }
 
 char* create_blank(int length) {
@@ -136,7 +151,7 @@ int delete_word(char *input) {//발견 실패 시 '0' 반환, 성공 시 '1' 반
 word* make_word(void) {
     word *new = (word *)malloc(sizeof(word));
     new->str = data[rand() % DATA_SIZE];
-    new->row = rand() % (MAP_HEIGHT-4) + 1;
+    new->row = rand() % (MAP_HEIGHT - 4) + 1;
     new->col = 1;
     new->next = NULL;
     return new;
@@ -156,7 +171,7 @@ void append_wordlist(void) {
 
 void *word_flow(void *none) {//화면에 글을 출력
     int word_rate = 10;
-	while(1) { 
+	while(1) {
 		word_rate++;
 	    if((word_rate%10)==0)
         	append_wordlist();
