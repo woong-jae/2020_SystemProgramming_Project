@@ -106,10 +106,21 @@ char* create_blank(int length) {
 
 void move_word(word* w) {
     char *blank = create_blank((int)(strlen(w->str) + 1));
-    mvaddstr(w->row, w->col, blank);
-    
+    mvaddstr(w->row, w->col, blank);    
     w->col = w->col + 1;
-    mvaddstr(w->row, w->col, w->str);
+    if(w->col+strlen(w->str) == MAP_WIDTH)
+    {
+	    hp--;
+	    if(hp == 0)
+	    {
+		    //GameOver();
+		    //pthread_exit(NULL);
+	    }
+	    w->str = "";
+	    delete_word(w->str);
+    }
+    else
+    	mvaddstr(w->row, w->col, w->str);
     refresh();
     free(blank);
 }
