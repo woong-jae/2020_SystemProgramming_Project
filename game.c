@@ -92,6 +92,7 @@ char* create_blank(int length) {
 void move_word(word* w) {
     char *blank = create_blank((int)(strlen(w->str) + 1));
     mvaddstr(w->row, w->col, blank);
+    
     w->col = w->col + 1;
     mvaddstr(w->row, w->col, w->str);
     refresh();
@@ -104,7 +105,7 @@ void reset_wordlist(void) {
     while(cur != NULL) {
         free(cur);
         cur = next;
-        next = cur->next;
+        if(cur != NULL) next = cur->next;
     }
 }
 
@@ -142,7 +143,6 @@ word* make_word(void) {
 }
 
 void append_wordlist(void) {
-    //sleep(1);
     if (!wordlist) {
         wordlist = make_word();
     } else {
@@ -167,6 +167,6 @@ void *word_flow(void *none) {//화면에 글을 출력
         }
         move(MAP_HEIGHT - 1 , cursor_position + 2);
         refresh();
-        usleep(200000);
+        usleep(500000);
     }
 }
