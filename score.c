@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <curses.h>
 #include <termios.h>
@@ -78,13 +79,18 @@ void input_prof() {
         FILE *f;
 
         clear();
+	echo();
         draw_border();
-        mvaddstr(3,29,"+INPUT YOUR PROFILE+");
-        mvaddstr(5,28,"+--------NAME--------+");
+        mvaddstr(1,29,"+INPUT YOUR PROFILE+");
+        mvaddstr(3,28,"+--------NAME--------+");
+	mvaddstr(5,27,"+-(Less Than 10 Words)-+");
         move(7,35);
         refresh();
-        fscanf(stdin, "%s", name);
-        f = fopen("score.txt", "a+");
-        fprintf(f, "%s %d\n", name, score);
-        fclose(f);
+        scanw("%s", name);
+	if(strlen(name)<=10)
+	{
+        	f = fopen("score.txt", "a+");
+        	fprintf(f, "%s %d\n", name, score);
+        	fclose(f);
+	}
 }
