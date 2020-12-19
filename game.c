@@ -96,10 +96,11 @@ void game(void)
         }
         refresh();
     }
-    pthread_join(t, NULL);
+    pthread_join(t, NULL); 
     reset();
     stage = 0;
     score = 0;
+    input_prof();
 }
 
 void status_bar(void) {
@@ -136,6 +137,8 @@ int move_word(word* w) {
 	    hp--;
 	    if(hp < 0)
 	    {
+		    mvaddstr(MAP_HEIGHT - 1, 28, ">>>>>Press Any Key<<<<<");
+		    refresh();
 		    pthread_exit(NULL);
         }
         word *cur, *prev;
