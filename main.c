@@ -50,6 +50,7 @@ void main_screen() {
         }else if(input == '\n') {
             if(current_position == 12) {
                 game();
+                clear();
                 draw_border();
                 draw_main();
                 refresh();

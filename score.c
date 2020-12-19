@@ -19,9 +19,19 @@ struct ranking {
 	int score;
 };
 
+int compare(const void *a, const void *b)
+{
+    struct ranking *ptA = (struct ranking *)a;
+    struct ranking *ptB = (struct ranking *)b;
+
+    if (ptA->score < ptB->score) return 1;
+    else if (ptA->score > ptB->score) return -1;
+    else return 0;
+}
+
 void sort_score(void) {
     struct ranking* r;
-        struct ranking tmp;
+    
     int i = 0;
     char buf[30];
     
@@ -32,20 +42,13 @@ void sort_score(void) {
     } else {
         int n = 0;
         r = (struct ranking*)calloc(30, sizeof(struct ranking)); //할당 크기
-            while (fscanf(f, "%s %d", r[i].name, &r[i].score) != EOF) {
-                i++;
-            }
-            for (int a = 0; a<10; a++) { //for size
-                for (int b = 0; b < 10-a-1; b++) {
-                        if (r[b].score < r[b+1].score) {
-                            tmp = r[b];
-                            r[b] = r[b + 1];
-                            r[b + 1] = tmp;
-                        }
-                }
-            }
+        while (fscanf(f, "%s %d", r[i].name, &r[i].score) != EOF) {
+            i++;
+        }
+            
+        qsort(r, i, sizeof(struct ranking), compare);
         do {
-            sprintf(buf,"%2d:%8s    %5d",n+1, r[n].name, r[n].score);
+            sprintf(buf,"%2d:%9s   %5d",n+1, r[n].name, r[n].score);
             n++;
             mvaddstr(5+n,30,buf);
         }while(n<10);
@@ -74,19 +77,18 @@ void scoreBoard() {
 }
 
 void input_prof(int score) {
-        int hp = 0;
-        char name[10];
-        FILE *f;
+    char name[10];
+    FILE *f;
 
-        clear();
+    clear();
 	echo();
-        draw_border();
-        mvaddstr(1,29,"+INPUT YOUR PROFILE+");
-        mvaddstr(3,28,"+--------NAME--------+");
+    draw_border();
+    mvaddstr(1,29,"+INPUT YOUR PROFILE+");
+    mvaddstr(3,28,"+--------NAME--------+");
 	mvaddstr(5,27,"+-(Less Than 10 Words)-+");
-        move(7,35);
-        refresh();
-        scanw("%s", name);
+    move(7,35);
+    refresh();
+    getnstr(name, 9);
 	if(strlen(name)<=10)
 	{
         	f = fopen("score.txt", "a+");

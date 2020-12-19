@@ -52,7 +52,7 @@ void game(void)
     memset(user_input, '\0', MAX_INPUT);
     while(hp > 0){ //유저 인풋 핸들
         char input = getch();
-        if(cursor_position < MAX_INPUT) {
+        if(cursor_position < MAX_INPUT - 1) {
             if (input == '\n') {//엔터
                 user_input[cursor_position] = '\0';
                 delete_check = delete_word(user_input);
@@ -101,6 +101,7 @@ void game(void)
     stage = 0;
     input_prof(score);
     score = 0;
+    clear();
 }
 
 void status_bar(void) {
