@@ -58,9 +58,11 @@ void main_screen() {
 //            }
             if(current_position == 13) {
                 sBoard();
+                clear();
                 draw_border();
                 draw_main();
                 refresh();
+                current_position = 12;
             } else if(current_position == 14) {
                 break;
             }

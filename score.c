@@ -20,12 +20,16 @@ void sBoard() {
 	draw_border();
 	mvaddstr(3,30,"+---SCOREBOARD---+");
 	mvaddstr(5,28,"+RANK----NAME----SCORE+");
-
-	while (fscanf(f, "%s %d", name, &score) != EOF) {
-		sprintf(buf,"%2d:%8s    %5d",i++, name, score);
-		mvaddstr(5+i,30,buf);
+    
+    if(f == NULL) {
+        mvaddstr(10, 30, "NO SCORE SUBMITTED");
+    } else {
+        while (fscanf(f, "%s %d", name, &score) != EOF) {
+            sprintf(buf,"%2d:%8s    %5d",i++, name, score);
+            mvaddstr(5+i,30,buf);
         }
-	mvaddstr(MAP_HEIGHT-1,2,"Press 'q' to main...");
+    }
+	mvaddstr(MAP_HEIGHT-1,2,"Press 'q' to return to main...");
 	refresh();
 	while (1) {
 		input = getch();
