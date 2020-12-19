@@ -19,7 +19,7 @@ typedef struct Word {
 } word;
 word *wordlist = NULL;
 
-int hp = 3, score = 0;;
+int hp = 3, score = 0;
 char user_input[MAX_INPUT];
 int cursor_position = 0;
 
@@ -91,7 +91,7 @@ void status_bar(void) {
     sprintf(cur_hp, "%d", hp);
     sprintf(cur_score, "%d", score);
     mvaddstr(MAP_HEIGHT - 1, 1, ":");
-    mvaddstr(MAP_HEIGHT - 3, 1, "HP: ");
+    mvaddstr(MAP_HEIGHT - 3, 2, "HP: ");
     addstr(cur_hp);
     addstr(" SCORE: ");
     addstr(cur_score);
@@ -106,10 +106,21 @@ char* create_blank(int length) {
 
 void move_word(word* w) {
     char *blank = create_blank((int)(strlen(w->str) + 1));
-    mvaddstr(w->row, w->col, blank);
-    
+    mvaddstr(w->row, w->col, blank);    
     w->col = w->col + 1;
-    mvaddstr(w->row, w->col, w->str);
+    if(w->col+strlen(w->str) == MAP_WIDTH)
+    {
+	    hp--;
+	    if(hp == 0)
+	    {
+		    //GameOver();
+		    //pthread_exit(NULL);
+	    }
+	    w->str = "";
+	    delete_word(w->str);
+    }
+    else
+    	mvaddstr(w->row, w->col, w->str);
     refresh();
     free(blank);
 }
