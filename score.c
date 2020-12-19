@@ -9,27 +9,7 @@
 #include <curses.h>
 #include <termios.h>
 #include <fcntl.h>
-
-#define MAP_WIDTH 80
-#define MAP_HEIGHT 20
-
-void draw_border();
-void sBoard();
-
-void draw_border() {
-    for(int i = 0 ; i < MAP_WIDTH; i++) {
-        mvaddch(0, i, '-');
-    }
-    for(int i = 0 ; i < MAP_WIDTH; i++) {
-        mvaddch(MAP_HEIGHT, i, '-');
-    }
-    for(int i = 1 ; i < MAP_HEIGHT; i++) {
-        mvaddch(i, 0, '|');
-    }
-    for(int i = 1 ; i < MAP_HEIGHT; i++) {
-        mvaddch(i, MAP_WIDTH - 1, '|');
-    }
-}
+#include "gets_header.h"
 
 void sBoard() {
 	FILE *f = fopen("score.txt", "r");
@@ -54,11 +34,4 @@ void sBoard() {
 		}
 	}
 	fclose(f);
-}
-
-void main() {
-	initscr();
-	draw_border();
-	sBoard();
-	endwin();
 }

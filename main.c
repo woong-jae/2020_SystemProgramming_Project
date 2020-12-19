@@ -7,21 +7,10 @@
 
 #include <stdio.h>
 #include <curses.h>
-#include <termios.h>
 #include <fcntl.h>
+#include <termios.h>
+#include "gets_header.h"
 
-#define MAP_WIDTH 80
-#define MAP_HEIGHT 20
-
-typedef struct word {
-    char *w;
-    int x, y;
-} word;
-
-void draw_main(void);
-void game(void);
-void draw_border(void);
-void main_screen(void);
 int main(int argc, const char * argv[]) {
     main_screen();
     return 0;
@@ -59,15 +48,20 @@ void main_screen() {
             standend();
             refresh();
         }else if(input == '\n') {
-            if(current_position == 12) {
-                echo();
-                game();
-                noecho();
+//            if(current_position == 12) {
+//                echo();
+//                game();
+//                noecho();
+//                draw_border();
+//                draw_main();
+//                refresh();
+//            }
+            if(current_position == 13) {
+                sBoard();
                 draw_border();
                 draw_main();
                 refresh();
-            }
-            if(current_position == 14) {
+            } else if(current_position == 14) {
                 break;
             }
         }
@@ -87,7 +81,7 @@ void draw_main() {
     mvaddstr(MAP_HEIGHT - 1, 2, "Press 'w' and 's' to move and press 'enter' to select...");
 }
 
-void draw_border() {
+void draw_border(void) {
     for(int i = 0 ; i < MAP_WIDTH; i++) {
         mvaddch(0, i, '-');
     }
@@ -99,16 +93,5 @@ void draw_border() {
     }
     for(int i = 1 ; i < MAP_HEIGHT; i++) {
         mvaddch(i, MAP_WIDTH - 1, '|');
-    }
-}
-
-void game() {
-    clear();
-    draw_border();
-    move(MAP_HEIGHT - 1, 2);
-    refresh();
-    while(1)
-    {
-        
     }
 }
