@@ -72,3 +72,19 @@ void scoreBoard() {
 	}
 }
 
+void input_prof() {
+        int hp = 0, score = 0;
+        char name[10];
+        FILE *f;
+
+        clear();
+        draw_border();
+        mvaddstr(3,29,"+INPUT YOUR PROFILE+");
+        mvaddstr(5,28,"+--------NAME--------+");
+        move(7,35);
+        refresh();
+        fscanf(stdin, "%s", name);
+        f = fopen("score.txt", "a+");
+        fprintf(f, "%s %d\n", name, score);
+        fclose(f);
+}
