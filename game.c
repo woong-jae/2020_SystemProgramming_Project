@@ -99,8 +99,8 @@ void game(void)
     pthread_join(t, NULL); 
     reset();
     stage = 0;
+    input_prof(score);
     score = 0;
-    input_prof();
 }
 
 void status_bar(void) {

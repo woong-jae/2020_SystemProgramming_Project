@@ -35,7 +35,7 @@ void sort_score(void) {
             while (fscanf(f, "%s %d", r[i].name, &r[i].score) != EOF) {
                 i++;
             }
-            for (int a = 0; a < 10; a++) { //for size
+            for (int a = 0; a<10; a++) { //for size
                 for (int b = 0; b < 10-a-1; b++) {
                         if (r[b].score < r[b+1].score) {
                             tmp = r[b];
@@ -73,8 +73,8 @@ void scoreBoard() {
 	}
 }
 
-void input_prof() {
-        int hp = 0, score = 0;
+void input_prof(int score) {
+        int hp = 0;
         char name[10];
         FILE *f;
 
