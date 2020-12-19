@@ -149,7 +149,7 @@ word* make_word(void) {
 }
 
 void append_wordlist(void) {
-    sleep(1);
+    //sleep(1);
     if (!wordlist) {
         wordlist = make_word();
     } else {
@@ -162,8 +162,11 @@ void append_wordlist(void) {
 }
 
 void *word_flow(void *none) {//화면에 글을 출력
-    while(1) {
-        append_wordlist();
+    int word_rate = 10;
+	while(1) { 
+		word_rate++;
+	    if((word_rate%10)==0)
+        	append_wordlist();
         word *cur = wordlist;
         while(cur) {
             move_word(cur);
@@ -171,7 +174,7 @@ void *word_flow(void *none) {//화면에 글을 출력
         }
         move(MAP_HEIGHT - 1 , cursor_position + 2);
         refresh();
-        usleep(500000);
+        usleep(200000);
     }
 }
 
