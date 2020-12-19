@@ -109,7 +109,7 @@ void status_bar(void) {
         mvaddch(MAP_HEIGHT - 2, i, '-');
     }
     sprintf(cur_hp, "%d", hp);
-    sprintf(cur_stage, "%d", stage);
+    sprintf(cur_stage, "%d", stage + 1);
     sprintf(cur_score, "%d", score);
     mvaddstr(MAP_HEIGHT - 1, 1, ":");
     mvaddstr(MAP_HEIGHT - 3, 2, "HP: ");
@@ -117,7 +117,7 @@ void status_bar(void) {
     addstr(" SCORE: ");
     addstr(cur_score);
     addstr(" STAGE: ");
-    addstr(cur_stage + 1);
+    addstr(cur_stage);
 }
 
 char* create_blank(int length) {
