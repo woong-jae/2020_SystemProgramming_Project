@@ -19,9 +19,12 @@ typedef struct Word {
 } word;
 word *wordlist = NULL;
 
-int hp = 3, score = 0;
+int hp = 3, score = 0, stage = 0;
 char user_input[MAX_INPUT];
 int cursor_position = 0;
+int stage_goal[] = {80, 200, 500, 800};
+int hit_score[] = {10, 20, 30, 40, 50};
+int stage_speed[] = {500000, 400000, 300000, 200000, 100000};
 
 void status_bar(void);
 char* create_blank(int length);
@@ -54,7 +57,16 @@ void game(void)
                 user_input[cursor_position] = '\0';
                 delete_check = delete_word(user_input);
                 if(delete_check == 1) {
-                    score += 10;
+                    score += hit_score[stage];
+                    if(stage < 4 && score >= stage_goal[stage]) {
+                        flash();
+                        clear();
+                        draw_border();
+                        status_bar();
+                        move(MAP_HEIGHT - 1 , 2);
+                        reset();
+                        stage++;
+                    }
                     status_bar();
                 }
                 char *blank = create_blank(cursor_position + 1);
@@ -86,20 +98,25 @@ void game(void)
     }
     pthread_join(t, NULL);
     reset();
+    stage = 0;
+    score = 0;
 }
 
 void status_bar(void) {
-    char cur_score[10], cur_hp[3];
+    char cur_score[10], cur_hp[3], cur_stage[3];
     for(int i = 1 ; i < MAP_WIDTH - 1; i++) {
         mvaddch(MAP_HEIGHT - 2, i, '-');
     }
     sprintf(cur_hp, "%d", hp);
+    sprintf(cur_stage, "%d", stage);
     sprintf(cur_score, "%d", score);
     mvaddstr(MAP_HEIGHT - 1, 1, ":");
     mvaddstr(MAP_HEIGHT - 3, 2, "HP: ");
     addstr(cur_hp);
     addstr(" SCORE: ");
     addstr(cur_score);
+    addstr(" STAGE: ");
+    addstr(cur_stage + 1);
 }
 
 char* create_blank(int length) {
@@ -115,6 +132,7 @@ int move_word(word* w) {
     w->col = w->col + 1;
     if(w->col + strlen(w->str) >= MAP_WIDTH)
     {
+        beep();
 	    hp--;
 	    if(hp < 0)
 	    {
@@ -231,6 +249,6 @@ void *word_flow(void *none) {//화면에 글을 출력
         }
         move(MAP_HEIGHT - 1 , cursor_position + 2);
         refresh();
-        usleep(100000);
+        usleep(stage_speed[stage]);
     }
 }
