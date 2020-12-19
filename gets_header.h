@@ -11,4 +11,5 @@ void draw_main(void);
 void draw_border(void);
 void main_screen(void);
 void scoreBoard(void);
+void input_prof(void);
 void game(void);
