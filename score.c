@@ -89,7 +89,7 @@ void input_prof(int score) {
     move(7,35);
     refresh();
     getnstr(name, 9);
-    if(name[0]=='\0')
+    if(name[0]=='\0'|name[0]==' ')
     {
 	input_prof(score);
 	return;
