@@ -52,8 +52,8 @@ void sort_score(void) {
             n++;
             mvaddstr(5+n,29,buf);
         }while(n<10);
+   	fclose(f);
     }
-    fclose(f);
 }
 
 void scoreBoard() {
@@ -81,7 +81,7 @@ void input_prof(int score) {
     FILE *f;
 
     clear();
-	echo();
+    echo();
     draw_border();
     mvaddstr(1,29,"+INPUT YOUR PROFILE+");
     mvaddstr(3,28,"+--------NAME--------+");
@@ -89,6 +89,11 @@ void input_prof(int score) {
     move(7,35);
     refresh();
     getnstr(name, 9);
+    if(name[0]=='\0')
+    {
+	input_prof(score);
+	return;
+    }
 	if(strlen(name)<=10)
 	{
         	f = fopen("score.txt", "a+");
