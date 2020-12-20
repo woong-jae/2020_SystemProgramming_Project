@@ -30,7 +30,7 @@ void status_bar(void);
 char* create_blank(int length);
 void *word_flow(void *none);
 void append_wordlist(void);
-word* make_word(void);
+word* make_word(int);
 int delete_word(char *input);
 void reset(void);
 int move_word(word* w);
@@ -216,10 +216,11 @@ int delete_word(char *input) {//발견 실패 시 '0' 반환, 성공 시 '1' 반
     return 0;
 }
 
-word* make_word(void) {
+word* make_word(int last_row) {
     word *new = (word *)malloc(sizeof(word));
     new->str = data[rand() % DATA_SIZE];
     new->row = rand() % (MAP_HEIGHT - 4) + 1;
+    if(new->row == last_row) new->row = (new->row + 1) % (MAP_HEIGHT - 4) + 1;
     new->col = 1;
     new->next = NULL;
     return new;
@@ -227,13 +228,13 @@ word* make_word(void) {
 
 void append_wordlist(void) {
     if (!wordlist) {
-        wordlist = make_word();
+        wordlist = make_word(0);
     } else {
         word* cur = wordlist;
         while(cur->next != NULL) {
             cur = cur->next;
         }
-        cur->next = make_word();
+        cur->next = make_word(cur->row);
     }
 }
 
