@@ -83,10 +83,13 @@ void input_prof(int score) {
     clear();
     echo();
     draw_border();
-    mvaddstr(1,29,"+INPUT YOUR PROFILE+");
-    mvaddstr(3,28,"+--------NAME--------+");
-	mvaddstr(5,27,"+-(Less Than 10 Words)-+");
-    move(7,35);
+    mvaddstr(2,30,"+INPUT YOUR PROFILE+");
+    mvaddstr(6,29,"+--------NAME--------+");
+	mvaddstr(7,28,"+-(Less Than 10 Words)-+");
+    mvaddstr(9, 30, "+------------------+");
+    mvaddstr(10, 30, "+                  +");
+    mvaddstr(11, 30, "+------------------+");
+    move(10,35);
     refresh();
     getnstr(name, 9);
     if(name[0]=='\0'|name[0]==' ')
