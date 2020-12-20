@@ -46,11 +46,10 @@ void game(void)
     status_bar();
     move(MAP_HEIGHT - 1 , 2);
     refresh();
-
     pthread_create(&t, NULL, word_flow, NULL);
     
     memset(user_input, '\0', MAX_INPUT);
-    while(hp > 0){ //유저 인풋 핸들
+    while(hp >= 0){ //유저 인풋 핸들
         char input = getch();
         if(cursor_position < MAX_INPUT - 1) {
             if (input == '\n') {//엔터
@@ -96,7 +95,8 @@ void game(void)
         }
         refresh();
     }
-    pthread_join(t, NULL); 
+    pthread_join(t, NULL);
+    fflush(stdin);
     reset();
     stage = 0;
     input_prof(score);
@@ -174,6 +174,12 @@ void reset(void) {
     word *cur = wordlist;
     word *prev = NULL;
     wordlist = NULL;
+    char *blank = create_blank(cursor_position + 1);
+    mvaddstr(MAP_HEIGHT - 1, 2, blank);
+    memset(user_input, '\0', MAX_INPUT);
+    move(MAP_HEIGHT - 1, 2);
+    cursor_position = 0;
+    free(blank);
     while(1) {
         if(cur == NULL) {
             break;
