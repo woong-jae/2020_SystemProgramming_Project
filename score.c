@@ -97,6 +97,15 @@ void input_prof(int score) {
 	input_prof(score);
 	return;
     }
+    for(int i=0;i<strlen(name);i++)
+    {
+	    if(name[i]==' ')
+	    {
+		    input_prof(score);
+		    return;
+	    }
+    }
+
 	if(strlen(name)<=10)
 	{
         	f = fopen("score.txt", "a+");
