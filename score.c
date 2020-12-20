@@ -48,7 +48,7 @@ void sort_score(void) {
             
         qsort(r, i, sizeof(struct ranking), compare);
         do {
-            sprintf(buf,"%2d: %9s     %5d",n+1, r[n].name, r[n].score);
+            sprintf(buf,"%2d: %9s    %5d",n+1, r[n].name, r[n].score);
             n++;
             mvaddstr(5+n,29,buf);
         }while(n<10);
@@ -62,7 +62,7 @@ void scoreBoard() {
 	clear();
 	draw_border();
 	mvaddstr(3,31,"+---SCOREBOARD---+");
-	mvaddstr(5,28,"+RANK-----NAME-----SCORE+");
+	mvaddstr(5,28,"+RANK-----NAME----SCORE+");
     
 	sort_score();
 
@@ -89,6 +89,7 @@ void input_prof(int score) {
     mvaddstr(9, 30, "+------------------+");
     mvaddstr(10, 30, "+                  +");
     mvaddstr(11, 30, "+------------------+");
+    mvaddstr(MAP_HEIGHT-1,2,"No space allowed...");
     move(10,35);
     refresh();
     getnstr(name, 9);
