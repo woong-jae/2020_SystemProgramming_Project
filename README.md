@@ -6,5 +6,4 @@ Compile example: gcc main.c score.c game.c -lpthread -lcurses -o "filename"\n
 
 ## 데모
 https://drive.google.com/file/d/168CZbgnFjN6-AvhtYbzTvyMkBtpkdVnd/view?usp=sharing
-## 발표영상
-https://drive.google.com/file/d/1uGj2u4OJEZUOI1Kz0krMzO55YZaFOwNR/view?usp=sharing
+
